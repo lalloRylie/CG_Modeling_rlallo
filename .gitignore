@@ -23,8 +23,8 @@ bld/
 [Oo]bj/
 !Libraries/glew-1.12.0/lib/Release/Win32
 !Debug/*.dll
-!DXSDK/Developer Runtime/x86/*.[Dd][Ll][Ll]
-!DXSDK/Lib/x86/*.lib
+!DXSDK/Developer Runtime/x86/
+!DXSDK/Lib/x86/
 
 # Visual Studo 2015 cache/options directory
 .vs/
