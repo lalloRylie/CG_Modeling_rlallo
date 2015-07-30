@@ -2,8 +2,7 @@
 ///////////////////////////////////////////////////////
 
 #include "StudentCode.h"
-#include "Utility.h"
-#include "DataCore.h"
+#include "main.h"
 
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "d3d9.lib")
@@ -13,6 +12,9 @@
 #pragma comment(lib, "libGLESv2.lib")
 #pragma comment(lib, "preprocessor.lib")
 #pragma comment(lib, "translator_lib.lib")
+
+
+using namespace CORE;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	if(message == WM_CLOSE) {
@@ -121,23 +123,22 @@ void OnDestroyInstance() {
 ////////////////////////////////////
 
 bool OnInitInstance() {
-	WNDCLASSEXA window;
+	WNDCLASSEXA windowClass;
+	memset(&windowClass, 0, sizeof(WNDCLASSEXA)); 
 
-	memset(&window, 0, sizeof(WNDCLASSEXA)); 
+	windowClass.cbSize = sizeof(WNDCLASSEXA);
+	windowClass.style = CS_OWNDC;
+	windowClass.lpfnWndProc = WndProc;
+	windowClass.cbClsExtra = 0;
+	windowClass. cbWndExtra = 0;
+	windowClass.hInstance = GetModuleHandle(NULL);
+	windowClass.hIcon = 0;
+	windowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
+	windowClass.hbrBackground = 0;
+	windowClass.lpszMenuName = 0;
+	windowClass.lpszClassName = "VGP363ProjectWndClass";
 
-	window.cbSize = sizeof(WNDCLASSEXA);
-	window.style = CS_OWNDC;
-	window.lpfnWndProc = WndProc;
-	window.cbClsExtra = 0;
-	window. cbWndExtra = 0;
-	window.hInstance = GetModuleHandle(NULL);
-	window.hIcon = 0;
-	window.hCursor = LoadCursorA(NULL, IDC_ARROW);
-	window.hbrBackground = 0;
-	window.lpszMenuName = 0;
-	window.lpszClassName = "VGP363ProjectWndClass";
-
-	if(!RegisterClassExA(&window)) {
+	if(!RegisterClassExA(&windowClass)) {
 		DebugLog("Window registration failed. \n");
 		return false;
 	}
@@ -152,7 +153,7 @@ bool OnInitInstance() {
 
 	//AdjustWindowRectEx(&windowSize, style, false, extendedStyle);
 
-	mNativeWindow = CreateWindowExA(extendedStyle, window.lpszClassName, "lalloRylie_VGP363_Project1", style, CW_USEDEFAULT, CW_USEDEFAULT, 720, 532, 0, 0, GetModuleHandle(NULL), 0);
+	mNativeWindow = CreateWindowExA(extendedStyle, "VGP363ProjectWndClass", "lalloRylie_VGP363_Project1", style, CW_USEDEFAULT, CW_USEDEFAULT, 720, 532, 0, 0, GetModuleHandle(NULL), 0);
 
 	ShowWindow(mNativeWindow, SW_SHOW);
 
