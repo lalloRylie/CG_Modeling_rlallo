@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "main.h"
-
 #ifndef _CORE_MESH_H_
 #define _CORE_MESH_H_
+
+#include "main.h"
 
 namespace CORE {
 	class Camera;
@@ -19,12 +19,10 @@ namespace CORE {
 	};
 
 	typedef struct GLBuffferObject{
-		GLBuffferObject();
 		GLuint id;
 		int itemSize;
 		int numItems;
-		DATA_BUFFER data;
-	
+		DATA_BUFFER data;	
 	};
 
 	class MeshVertex{
@@ -38,7 +36,6 @@ namespace CORE {
 	class Mesh{
 	public:
 		Mesh();
-
 		Material* material;
 		float alpha;
 		bool built;

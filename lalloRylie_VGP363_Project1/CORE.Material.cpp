@@ -167,6 +167,10 @@ namespace CORE {
 		samplerColorUniform      = glGetUniformLocation(this->shader, "uSamplerColor");
 		lightingDirectionUniform = glGetUniformLocation(this->shader, "uLightingDirection");
 		directionalColorUniform  = glGetUniformLocation(this->shader, "uDirectionalColor");
+
+		glEnableVertexAttribArray(this->vertexPositionAttribute);
+		glEnableVertexAttribArray(this->vertexNormalAttribute);
+		glEnableVertexAttribArray(this->textureCoordAttribute);
 	}
 
 	void DefaultMaterial::Render(Camera* camera, Mesh* mesh){
@@ -182,7 +186,7 @@ namespace CORE {
 		glVertexAttribPointer(this->textureCoordAttribute, mesh->textureCoordBuffer.itemSize, GL_FLOAT, false, 0, 0);
 
 		glUniform3f(ambientColorUniform, 0.15f, 0.15f, 0.15f);
-		glUniform3f(lightingDirectionUniform, 0.0f, 0.0f, 0.0f);
+		glUniform3f(lightingDirectionUniform, 0.0f, 0.0f, 1.0f);
 		glUniform3f(directionalColorUniform, 0.88f, 0.88f, 0.88f);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer.id);

@@ -1,7 +1,7 @@
-//Main.cpp
+//main.cpp
 ///////////////////////////////////////////////////////
 
-#include "StudentCode.h"
+#include "APP.Main.h"
 #include "main.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -116,7 +116,6 @@ void OnDestroyInstance() {
 	UnregisterClassA("VGP363ProjectWndClass", NULL);
 
 	DebugLog("Unitialization succeeded. \n");
-	system("pause");
 }
 
 
@@ -203,23 +202,20 @@ void main() {
 	}
 	
 	mAppRunning = true;
-
 	OnInitialize();
 
-	
 	while(mAppRunning) {
 		MSG message;
-		bool messageRetrieved = false;
 
-		messageRetrieved = PeekMessage(&message, 0, 0, 0, PM_REMOVE);
+		if(Time::DeltaTicks < 30) Sleep(30 - Time::DeltaTicks);
 
-		if(messageRetrieved){
+		OnFrame();
+		eglSwapBuffers(mDisplay, mSurface);
+
+		while(PeekMessage(&message, NULL, 0, 0, PM_REMOVE)){
 			TranslateMessage(&message);
 			DispatchMessage(&message);
-
-			OnFrame();
-		}
+		}	
 	}
-
 	OnDestroyInstance();
 }

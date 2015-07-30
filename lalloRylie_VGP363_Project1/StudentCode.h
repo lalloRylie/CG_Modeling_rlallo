@@ -1,7 +1,0 @@
-//StudentCode.h
-///////////////////////////////////////////////////////
-
-#pragma once
-
-void OnInitialize();
-void OnFrame();

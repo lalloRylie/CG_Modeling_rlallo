@@ -6,7 +6,7 @@
 
 namespace CORE {
 	namespace Time {
-		unsigned long GlobalTime, PreviousTime, NextFrameTime, DeltaTicks;
+		unsigned long GlobalTime, PreviousTime, DeltaTicks;
 		float DeltaTime;
 
 		void Update(){

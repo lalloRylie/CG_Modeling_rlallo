@@ -2,6 +2,7 @@
 ///////////////////////////////////////////////////////
 
 #include "main.h"
+#include <math.h>
 
 namespace CORE {
 	Matrix::Matrix(){
@@ -37,6 +38,90 @@ namespace CORE {
 					  0, 1, 0, 0, 
 					  0, 0, 1, 0, 
 					  0, 0, 0, 1);
+	}
+
+	Matrix Matrix::Translation(float x, float y, float z){
+		return Matrix(1, 0, 0, x, 
+					  0, 1, 0, y, 
+					  0, 0, 1, z, 
+					  0, 0, 0, 1);
+	}
+
+	Matrix Matrix::InverseTranslation(float x, float y, float z){
+		return Matrix(1, 0, 0, -x, 
+					  0, 1, 0, -y, 
+					  0, 0, 1, -z, 
+					  0, 0, 0, 1);
+	}
+
+	Matrix Matrix::Rotation(float x, float y, float z){
+		return Matrix(cos(z)*cos(y), cos(z)*sin(y)*sin(x)-sin(z)*cos(x), cos(z)*sin(y)*cos(x)+sin(z)*sin(x), 0,
+					  sin(z)*cos(y), sin(z)*sin(y)*sin(x)+cos(z)*cos(x), sin(z)*sin(y)*cos(x)-cos(z)*sin(x), 0,
+					  -sin(y)      , cos(y)*sin(x)                     , cos(y)*cos(x)                     , 0,
+					              0,                                  0,                                  0, 1);
+	}	
+
+	Matrix Matrix::InverseRotation(float x, float y, float z){
+		return Matrix(cos(z)*cos(y)                     , sin(z)*cos(y)                     , -sin(y)      , 0,
+					  cos(z)*sin(y)*sin(x)-sin(z)*cos(x), sin(z)*sin(y)*sin(x)+cos(z)*cos(x), cos(y)*sin(x), 0,
+					  cos(z)*sin(y)*cos(x)+sin(z)*sin(x), sin(z)*sin(y)*cos(x)-cos(z)*sin(x), cos(y)*cos(x), 0,
+					                                   0,                                  0,             0, 1);
+	}
+
+	Matrix Matrix::SpaceRotation(const vector& xaxis, const vector& yaxis, const vector& zaxis){
+		return Matrix(xaxis.x, xaxis.y, xaxis.z, 0,
+					  yaxis.x, yaxis.y, yaxis.z, 0,
+					  zaxis.x, zaxis.y, zaxis.z, 0,
+					        0,       0,       0, 1);
+	}
+
+	Matrix Matrix::InverseSpaceRotation(const vector& xaxis, const vector& yaxis, const vector& zaxis){
+		return Matrix(xaxis.x, yaxis.x, zaxis.x, 0,
+					  xaxis.y, yaxis.y, zaxis.y, 0,
+					  xaxis.z, yaxis.z, zaxis.z, 0,
+					        0,       0,       0, 1);
+	}
+
+	Matrix Matrix::RotationAroundVector(float theta, float Vx, float Vy, float Vz){
+		return Matrix(cos(theta)+Vx*Vx*(1-cos(theta))    , -Vz*sin(theta)+Vx*Vy*(1-cos(theta)), Vy*sin(theta)+Vx*Vz*(1-cos(theta)) , 0,
+				      Vz*sin(theta)+Vy*Vx*(1-cos(theta)) , cos(theta)+Vy*Vy*(1-cos(theta))    , -Vx*sin(theta)+Vy*Vz*(1-cos(theta)), 0,
+				      -Vy*sin(theta)+Vz*Vx*(1-cos(theta)), Vx*sin(theta)+Vz*Vy*(1-cos(theta)) , cos(theta)+Vz*Vz*(1-cos(theta))    , 0,
+				                                        0,                                   0,                                   0, 1);
+	}
+
+	Matrix Matrix::InverseRotationAroundVector(float theta, float Vx, float Vy, float Vz){
+		return Matrix(cos(-theta)+Vx*Vx*(1-cos(-theta))    , -Vz*sin(-theta)+Vx*Vy*(1-cos(-theta)), Vy*sin(-theta)+Vx*Vz*(1-cos(-theta)) , 0,
+				      Vz*sin(-theta)+Vy*Vx*(1-cos(-theta)) , cos(-theta)+Vy*Vy*(1-cos(-theta))    , -Vx*sin(-theta)+Vy*Vz*(1-cos(-theta)), 0,
+				      -Vy*sin(-theta)+Vz*Vx*(1-cos(-theta)), Vx*sin(-theta)+Vz*Vy*(1-cos(-theta)) , cos(-theta)+Vz*Vz*(1-cos(-theta))    , 0,
+				                                          0,                                     0,                                     0, 1);
+	}
+
+	Matrix Matrix::Perspective(float fov, float w, float h, float _near, float _far){
+		return Matrix((1/tan((fov/(w/h))/2))/(w/h),                    0,                         0,                           0,
+					                             0, 1/tan((fov/(w/h))/2),                         0,                           0,
+					                             0,                    0, (_far+_near)/(_near-_far), (2*_far*_near)/(_near-_far),
+					                             0,                    0,                        -1,                           0);
+	}
+
+	Matrix Matrix::InversePerspective(float fov, float w, float h, float _near, float _far){
+		return Matrix((w/h)/(1/tan((fov/(w/h))/2)),                  0,                           0,                            0,
+					                             0, tan((fov/(w/h))/2),                           0,                            0,
+					                             0,                  0,                           0,                           -1,
+					                             0,                  0, (_near-_far)/(2*_far*_near), (_far+_near)/(2*_far*_near));
+	}
+
+	Matrix Matrix::Orthographic(float L, float r, float b, float t, float n, float f){
+		return Matrix(2/(r-L),       0,        0, (r+L)/(r-L),
+					  	    0, 2/(t-b),        0, (t+b)/(t-b),
+					  	    0,       0, -2/(f-n), (f+n)/(f-n),
+					  	    0,       0,        0,          1);
+	}
+
+	Matrix Matrix::InverseOrthographic(float L, float r, float b, float t, float n, float f){
+		return Matrix((r-L)/2.0,         0,          0, (r+L)/2.0,
+					          0, (t-b)/2.0,          0, (t+b)/2.0,
+					          0,         0, (f-n)/-2.0, (f+n)/2.0,
+					          0,         0,          0,        1);
 	}
 
 	void GL_SetModelMatrix(const Matrix& matrix){

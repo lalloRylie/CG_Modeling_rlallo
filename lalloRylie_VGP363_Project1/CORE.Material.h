@@ -3,11 +3,10 @@
 
 #pragma once
 
-#include "DataCore.h"
-
 #ifndef _CORE_MATERIAL_H_
 #define _CORE_MATERIAL_H_
 
+#include "DataCore.h"
 
 #define SHADER_SOURCE(...) #__VA_ARGS__
 
@@ -21,13 +20,9 @@ typedef GLuint TEXTURE;
 #define INVALID_TEXTURE_VALUE (-1)
 
 namespace CORE {
+	class Material;
 	class Mesh;
 	class Camera;
-
-	MATERIAL_ID GL_CreateMaterial(const char* vs_src, const char* fs_src);
-	GLuint GL_CreateVertexShader(const char* src);
-	GLuint GL_CreateFragmentShader(const char* src);
-	GLuint GL_CompileShader(GLuint shader);
 
 	class Material{
 	public:
@@ -61,6 +56,10 @@ namespace CORE {
 
 	DefaultMaterial* GetDefaultMaterial();
 	DefaultMaterial* CreateDefaultMaterial();
+	MATERIAL_ID GL_CreateMaterial(const char* vs_src, const char* fs_src);
+	GLuint GL_CreateVertexShader(const char* src);
+	GLuint GL_CreateFragmentShader(const char* src);
+	GLuint GL_CompileShader(GLuint shader);
 }
 
 #endif

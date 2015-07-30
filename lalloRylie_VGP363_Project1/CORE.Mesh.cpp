@@ -4,6 +4,11 @@
 #include "main.h"
 
 namespace CORE {
+	Mesh::Mesh(){
+		memset(this, 0, sizeof(Mesh));
+		this->alpha = 1.0f;
+	}
+
 	void Mesh::AllocateVertices(int count){
 		this->vertexBuffer.itemSize = 3;
 		this->vertexBuffer.numItems = count;
@@ -53,4 +58,19 @@ namespace CORE {
 			this->material->Render(camera, this);
 		}
 	}
+
+	MeshVertex::MeshVertex(float x, float y, float z, float nx, float ny, float nz, float tu, float tv){
+			this->x = x;
+			this->y = y;
+			this->z = z;
+			this->w = 1.0f;
+			this->nx = nx;
+			this->ny = ny;
+			this->nz = nz;
+			this->nw = 0.0f;
+			this->tu = tu;
+			this->tv = tv;
+			this->gu = 0.0f;
+			this->gv = 0.0f;
+		}
 }
