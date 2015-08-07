@@ -3,6 +3,40 @@
 
 #include "main.h"
 
+#define MAX_TEXTURE_CHANNELS 10
+
+namespace CORE {
+	CORE::Texture* _textureChannel[MAX_TEXTURE_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	void GL_EnableTexture(int channel, CORE::Texture* texture, int options) {
+		if(channel < 0) {
+			channel = 0;
+		}
+		if(channel > (MAX_TEXTURE_CHANNELS - 1)) {
+			channel = MAX_TEXTURE_CHANNELS - 1;
+		}
+
+		if(texture == 0) {
+			return;
+		}
+
+		_textureChannel[channel] = texture;
+
+		if(!texture->built){
+			glGenTextures(1, (GLuint*) &texture->id);
+			glBindTexture(GL_TEXTURE_2D, texture->id);
+			glTexImage2D(GL_TEXTURE_2D, 0, texture->format, texture->width, texture->height, 0, texture->format, GL_UNSIGNED_BYTE, texture->data);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			texture->built = true;
+		}
+	}
+
+}
+
 namespace CORE {
 	const char* FRAGMENT_SHADER_DEFAULT = SHADER_SOURCE
 	(
@@ -15,7 +49,8 @@ namespace CORE {
 		uniform float uAlpha;
 
 		void main(void) {
-			gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+			vec4 textureColor = texture2D(uSamplerColor, vec2(vTextureCoord.x, vTextureCoord.y));
+			gl_FragColor = vec4(textureColor.rgb, textureColor.a);
 		}
 	);
 
@@ -175,6 +210,14 @@ namespace CORE {
 
 	void DefaultMaterial::Render(Camera* camera, Mesh* mesh){
 		this->Activate(mesh);
+
+		if(mesh != 0) {
+			GL_EnableTexture(0, mesh->texture, 0);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, mesh->texture->id);
+			glUniform1i(this->samplerColorUniform, 0);
+
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->vertexBuffer.id);
 		glVertexAttribPointer(this->vertexPositionAttribute, mesh->vertexBuffer.itemSize, GL_FLOAT, false, 0, 0);

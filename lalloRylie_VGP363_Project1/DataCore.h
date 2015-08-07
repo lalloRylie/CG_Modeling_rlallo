@@ -11,12 +11,14 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-extern EGLDisplay mDisplay;
-extern EGLNativeWindowType mNativeWindow;
-extern EGLNativeDisplayType mNativeDisplay;
-extern bool mAppRunning;
-
-extern EGLConfig mConfig;
-extern EGLSurface mSurface;
-extern EGLContext mContext;
-extern EGLint mConfigCount;
+namespace DATACORE{
+	extern EGLDisplay mDisplay;
+	extern EGLNativeWindowType mNativeWindow;
+	extern EGLNativeDisplayType mNativeDisplay;
+	extern bool mAppRunning;
+	
+	extern EGLConfig mConfig;
+	extern EGLSurface mSurface;
+	extern EGLContext mContext;
+	extern EGLint mConfigCount;
+}

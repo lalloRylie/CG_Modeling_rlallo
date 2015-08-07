@@ -7,6 +7,7 @@
 #define _CORE_MESH_H_
 
 #include "main.h"
+#include "CORE.Texture.h"
 
 namespace CORE {
 	class Camera;
@@ -37,6 +38,7 @@ namespace CORE {
 	public:
 		Mesh();
 		Material* material;
+		Texture* texture;
 		float alpha;
 		bool built;
 

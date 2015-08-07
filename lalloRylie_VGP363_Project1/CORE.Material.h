@@ -7,6 +7,7 @@
 #define _CORE_MATERIAL_H_
 
 #include "DataCore.h"
+#include "CORE.Texture.h"
 
 #define SHADER_SOURCE(...) #__VA_ARGS__
 
@@ -18,6 +19,11 @@ typedef GLint MATERIAL_ATTRIBUTE;
 
 typedef GLuint TEXTURE;
 #define INVALID_TEXTURE_VALUE (-1)
+
+
+namespace CORE {
+	void GL_EnableTexture(int channel, CORE::Texture* texture, int options);
+}
 
 namespace CORE {
 	class Material;
