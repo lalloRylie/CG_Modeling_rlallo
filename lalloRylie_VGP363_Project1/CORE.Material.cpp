@@ -15,11 +15,9 @@ namespace CORE {
 		if(channel > (MAX_TEXTURE_CHANNELS - 1)) {
 			channel = MAX_TEXTURE_CHANNELS - 1;
 		}
-
 		if(texture == 0) {
 			return;
 		}
-
 		_textureChannel[channel] = texture;
 
 		if(!texture->built){

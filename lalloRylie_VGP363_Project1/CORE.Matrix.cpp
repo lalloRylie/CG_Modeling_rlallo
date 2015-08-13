@@ -2,7 +2,6 @@
 ///////////////////////////////////////////////////////
 
 #include "main.h"
-#include <math.h>
 
 namespace CORE {
 	Matrix::Matrix(){
@@ -40,18 +39,18 @@ namespace CORE {
 					  0, 0, 0, 1);
 	}
 
-	Matrix Matrix::Translation(float x, float y, float z){
-		return Matrix(1, 0, 0, x, 
-					  0, 1, 0, y, 
-					  0, 0, 1, z, 
-					  0, 0, 0, 1);
+	Matrix Matrix::Translate(float x, float y, float z){
+		return Matrix(1, 0, 0, 0, 
+					  0, 1, 0, 0, 
+					  0, 0, 1, 0, 
+					  x, y, z, 1);
 	}
 
-	Matrix Matrix::InverseTranslation(float x, float y, float z){
-		return Matrix(1, 0, 0, -x, 
-					  0, 1, 0, -y, 
-					  0, 0, 1, -z, 
-					  0, 0, 0, 1);
+	Matrix Matrix::InverseTranslate(float x, float y, float z){
+		return Matrix(1,  0,  0, 0, 
+					  0,  1,  0, 0, 
+					  0,  0,  1, 0, 
+					 -x, -y, -z, 1);
 	}
 
 	Matrix Matrix::Rotation(float x, float y, float z){
@@ -97,10 +96,16 @@ namespace CORE {
 	}
 
 	Matrix Matrix::Perspective(float fov, float w, float h, float _near, float _far){
-		return Matrix((1/tan((fov/(w/h))/2))/(w/h),                    0,                         0,                           0,
-					                             0, 1/tan((fov/(w/h))/2),                         0,                           0,
-					                             0,                    0, (_far+_near)/(_near-_far), (2*_far*_near)/(_near-_far),
-					                             0,                    0,                        -1,                           0);
+		float aspect = w / h;
+		fov = (fov * 3.14159265358) / 180.0;
+		float fovy = fov / aspect;
+		float f = 1 / tan(fovy / 2);
+		return Matrix(
+			f / aspect, 0, 0, 0,
+			0, f, 0, 0,
+			0, 0, (_far + _near) / (_near - _far), -1,
+			0, 0, (2 * _far * _near) / (_near - _far), 0
+		);
 	}
 
 	Matrix Matrix::InversePerspective(float fov, float w, float h, float _near, float _far){
@@ -123,6 +128,41 @@ namespace CORE {
 					          0,         0, (f-n)/-2.0, (f+n)/2.0,
 					          0,         0,          0,        1);
 	}
+	// MatrixMultiply :
+	// Performs the multiplication of two matrices together so as to
+	// combine the effects of their space transformations together.
+	// The resulting matrix performs N first and them M.
+	Matrix Matrix::Multiply(const Matrix& m, const Matrix& n) {
+		Matrix r = Matrix::Identity();
+		r.m[0*4+0] = m.m[0*4+0] * n.m[0*4+0] + m.m[0*4+1] * n.m[1*4+0] + m.m[0*4+2] * n.m[2*4+0] + m.m[0*4+3] * n.m[3*4+0];
+		r.m[0*4+1] = m.m[0*4+0] * n.m[0*4+1] + m.m[0*4+1] * n.m[1*4+1] + m.m[0*4+2] * n.m[2*4+1] + m.m[0*4+3] * n.m[3*4+1];
+		r.m[0*4+2] = m.m[0*4+0] * n.m[0*4+2] + m.m[0*4+1] * n.m[1*4+2] + m.m[0*4+2] * n.m[2*4+2] + m.m[0*4+3] * n.m[3*4+2];
+		r.m[0*4+3] = m.m[0*4+0] * n.m[0*4+3] + m.m[0*4+1] * n.m[1*4+3] + m.m[0*4+2] * n.m[2*4+3] + m.m[0*4+3] * n.m[3*4+3];
+		r.m[1*4+0] = m.m[1*4+0] * n.m[0*4+0] + m.m[1*4+1] * n.m[1*4+0] + m.m[1*4+2] * n.m[2*4+0] + m.m[1*4+3] * n.m[3*4+0];
+		r.m[1*4+1] = m.m[1*4+0] * n.m[0*4+1] + m.m[1*4+1] * n.m[1*4+1] + m.m[1*4+2] * n.m[2*4+1] + m.m[1*4+3] * n.m[3*4+1];
+		r.m[1*4+2] = m.m[1*4+0] * n.m[0*4+2] + m.m[1*4+1] * n.m[1*4+2] + m.m[1*4+2] * n.m[2*4+2] + m.m[1*4+3] * n.m[3*4+2];
+		r.m[1*4+3] = m.m[1*4+0] * n.m[0*4+3] + m.m[1*4+1] * n.m[1*4+3] + m.m[1*4+2] * n.m[2*4+3] + m.m[1*4+3] * n.m[3*4+3];
+		r.m[2*4+0] = m.m[2*4+0] * n.m[0*4+0] + m.m[2*4+1] * n.m[1*4+0] + m.m[2*4+2] * n.m[2*4+0] + m.m[2*4+3] * n.m[3*4+0];
+		r.m[2*4+1] = m.m[2*4+0] * n.m[0*4+1] + m.m[2*4+1] * n.m[1*4+1] + m.m[2*4+2] * n.m[2*4+1] + m.m[2*4+3] * n.m[3*4+1];
+		r.m[2*4+2] = m.m[2*4+0] * n.m[0*4+2] + m.m[2*4+1] * n.m[1*4+2] + m.m[2*4+2] * n.m[2*4+2] + m.m[2*4+3] * n.m[3*4+2];
+		r.m[2*4+3] = m.m[2*4+0] * n.m[0*4+3] + m.m[2*4+1] * n.m[1*4+3] + m.m[2*4+2] * n.m[2*4+3] + m.m[2*4+3] * n.m[3*4+3];
+		r.m[3*4+0] = m.m[3*4+0] * n.m[0*4+0] + m.m[3*4+1] * n.m[1*4+0] + m.m[3*4+2] * n.m[2*4+0] + m.m[3*4+3] * n.m[3*4+0];
+		r.m[3*4+1] = m.m[3*4+0] * n.m[0*4+1] + m.m[3*4+1] * n.m[1*4+1] + m.m[3*4+2] * n.m[2*4+1] + m.m[3*4+3] * n.m[3*4+1];
+		r.m[3*4+2] = m.m[3*4+0] * n.m[0*4+2] + m.m[3*4+1] * n.m[1*4+2] + m.m[3*4+2] * n.m[2*4+2] + m.m[3*4+3] * n.m[3*4+2];
+		r.m[3*4+3] = m.m[3*4+0] * n.m[0*4+3] + m.m[3*4+1] * n.m[1*4+3] + m.m[3*4+2] * n.m[2*4+3] + m.m[3*4+3] * n.m[3*4+3];
+		return r;
+	}
+	// ExtractZ : Given a 4x4 matrix, 
+	// returns the Z vector out of the matrix.
+	DATACORE::Vector Matrix::ExtractZ(const Matrix& m) {
+		return DATACORE::Vector(
+			m.m[0*4+2],
+			m.m[1*4+2],
+			m.m[2*4+2],
+			m.m[3*4+2]
+		);
+	}
+	
 
 	void GL_SetModelMatrix(const Matrix& matrix){
 		memcpy(_ModelMatrix, matrix.m, sizeof(float)*16);

@@ -21,6 +21,59 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	if(message == WM_CLOSE) {
 		mAppRunning = false;
 	}
+
+	switch (message)
+    {
+        case WM_KEYDOWN:
+        case WM_SYSKEYDOWN:
+        case WM_KEYUP:
+        case WM_SYSKEYUP:
+        {
+            bool down = (message == WM_KEYDOWN || message == WM_SYSKEYDOWN);
+
+			// alt     = HIWORD(GetAsyncKeyState(VK_MENU))    != 0;
+			// control = HIWORD(GetAsyncKeyState(VK_CONTROL)) != 0;
+			// shift   = HIWORD(GetAsyncKeyState(VK_SHIFT))   != 0;
+			// system  = HIWORD(GetAsyncKeyState(VK_LWIN)) || HIWORD(GetAsyncKeyState(VK_RWIN));
+			// Set a breakpoint, run your project, press a key and add support for various keys.
+			short key = wParam;
+  			if(key == 39) _KEYBOARD_RIGHT = down;
+			else if(key == 37) _KEYBOARD_LEFT = down;
+			else if(key == 38) _KEYBOARD_UP = down;
+			else if(key == 40) _KEYBOARD_DOWN = down;
+
+			break;
+        }
+
+        case WM_LBUTTONDOWN:
+        {
+            short x      = static_cast<short>(LOWORD(lParam));
+            short y      = static_cast<short>(HIWORD(lParam));
+			/////////////////////////////////////////////////////////
+			
+			/////////////////////////////////////////////////////////
+            break;
+        }
+
+        case WM_LBUTTONUP:
+        {
+            short x      = static_cast<short>(LOWORD(lParam));
+            short y      = static_cast<short>(HIWORD(lParam));
+			/////////////////////////////////////////////////////////
+
+			/////////////////////////////////////////////////////////
+            break;
+        }
+
+		case WM_MOUSEMOVE:
+        {
+            short x      = static_cast<short>(LOWORD(lParam));
+            short y      = static_cast<short>(HIWORD(lParam));
+			/////////////////////////////////////////////////////////
+
+			/////////////////////////////////////////////////////////
+		}
+    }
 	return DefWindowProcA(hWnd, message, wParam, lParam);
 }
 
@@ -130,7 +183,7 @@ bool OnInitInstance() {
 	windowClass.style = CS_OWNDC;
 	windowClass.lpfnWndProc = WndProc;
 	windowClass.cbClsExtra = 0;
-	windowClass. cbWndExtra = 0;
+	windowClass.cbWndExtra = 0;
 	windowClass.hInstance = GetModuleHandle(NULL);
 	windowClass.hIcon = 0;
 	windowClass.hCursor = LoadCursorA(NULL, IDC_ARROW);
@@ -153,7 +206,7 @@ bool OnInitInstance() {
 
 	//AdjustWindowRectEx(&windowSize, style, false, extendedStyle);
 
-	mNativeWindow = CreateWindowExA(extendedStyle, "VGP363ProjectWndClass", "lalloRylie_VGP363_Project1", style, CW_USEDEFAULT, CW_USEDEFAULT, 720, 532, 0, 0, GetModuleHandle(NULL), 0);
+	mNativeWindow = CreateWindowExA(extendedStyle, "VGP363ProjectWndClass", "lalloRylie_VGP363_Project1", style, CW_USEDEFAULT, CW_USEDEFAULT, wndWidth, wndHeight, 0, 0, GetModuleHandle(NULL), 0);
 
 	ShowWindow(mNativeWindow, SW_SHOW);
 

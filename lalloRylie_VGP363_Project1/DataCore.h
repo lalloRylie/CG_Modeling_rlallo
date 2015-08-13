@@ -21,4 +21,23 @@ namespace DATACORE{
 	extern EGLSurface mSurface;
 	extern EGLContext mContext;
 	extern EGLint mConfigCount;
+
+	extern int wndWidth;
+	extern int wndHeight;
+
+	extern bool _KEYBOARD_LEFT; 
+	extern bool _KEYBOARD_RIGHT;
+	extern bool _KEYBOARD_UP;	
+	extern bool _KEYBOARD_DOWN;	
+
+	class Vector {
+	public:
+		Vector(float x, float y, float z, float w) {
+			this->x = x;
+			this->y = y;
+			this->z = z;
+			this->w = w;
+		}
+		float x, y, z, w;
+	};
 }
