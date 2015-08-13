@@ -4,6 +4,9 @@
 #include "main.h"
 
 namespace CORE {
+
+	Mesh* _cube = NULL;
+
 	Mesh::Mesh(){
 		memset(this, 0, sizeof(Mesh));
 		this->alpha = 1.0f;
@@ -57,6 +60,56 @@ namespace CORE {
 		if(this->material != 0){
 			this->material->Render(camera, this);
 		}
+	}
+
+	Mesh* Mesh::CreateCube(float scale) {
+		Mesh* Cube = new Mesh();
+		Cube->AllocateVertices(36);
+		//face1:
+		Cube->SetVertex(0,  MeshVertex(-1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 1.0f));
+		Cube->SetVertex(1,  MeshVertex(-1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(2,  MeshVertex( 1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		Cube->SetVertex(3,  MeshVertex(-1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(4,  MeshVertex( 1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+		Cube->SetVertex(5,  MeshVertex( 1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));									  
+		//face2:						  											
+		Cube->SetVertex(6,  MeshVertex( 1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 1.0f));
+		Cube->SetVertex(7,  MeshVertex( 1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(8,  MeshVertex( 1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		Cube->SetVertex(9,  MeshVertex( 1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(10, MeshVertex( 1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+		Cube->SetVertex(11, MeshVertex( 1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));									  
+		//face3							  											
+		Cube->SetVertex(12, MeshVertex( 1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 1.0f));
+		Cube->SetVertex(13, MeshVertex( 1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(14, MeshVertex(-1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		Cube->SetVertex(15, MeshVertex( 1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(16, MeshVertex(-1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+		Cube->SetVertex(17, MeshVertex(-1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));								 
+		//face4							 											 
+		Cube->SetVertex(18, MeshVertex(-1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 1.0f));
+		Cube->SetVertex(19, MeshVertex(-1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(20, MeshVertex(-1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		Cube->SetVertex(21, MeshVertex(-1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(22, MeshVertex(-1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+		Cube->SetVertex(23, MeshVertex(-1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));							  
+		//face5							  											
+		Cube->SetVertex(24, MeshVertex(-1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 1.0f));
+		Cube->SetVertex(25, MeshVertex(-1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(26, MeshVertex( 1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		Cube->SetVertex(27, MeshVertex(-1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(28, MeshVertex( 1.0f * scale, -1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+		Cube->SetVertex(29, MeshVertex( 1.0f * scale, -1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));										  								
+		//face6							  											 
+		Cube->SetVertex(30, MeshVertex(-1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 1.0f));
+		Cube->SetVertex(31, MeshVertex(-1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(32, MeshVertex( 1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		Cube->SetVertex(33, MeshVertex(-1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+		Cube->SetVertex(34, MeshVertex( 1.0f * scale,  1.0f * scale, 0.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+		Cube->SetVertex(35, MeshVertex( 1.0f * scale,  1.0f * scale, 1.0f * (scale * 2.0), 0.0f, 0.0f, -1.0f, 1.0f, 1.0f));
+		
+		_cube = Cube;
+		return _cube;
 	}
 
 	MeshVertex::MeshVertex(float x, float y, float z, float nx, float ny, float nz, float tu, float tv){
