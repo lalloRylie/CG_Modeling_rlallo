@@ -26,10 +26,14 @@ void OnInitialize(){
 
 	_Mesh = new Mesh();
 
-	_Mesh->AllocateVertices(3);
-	_Mesh->SetVertex(0, CORE::MeshVertex(-100.75f, -10.0f, -100.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
-	_Mesh->SetVertex(1, CORE::MeshVertex(0.0f, 0.75f, 100.0f, 0.0f, 0.0f, -1.0f, 0.5f, 1.0f));
-	_Mesh->SetVertex(2, CORE::MeshVertex(100.75f, -10.0f, -100.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f));
+	_Mesh->AllocateVertices(6);
+	_Mesh->SetVertex(0, CORE::MeshVertex(-100.0f, -10.0f, -100.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+	_Mesh->SetVertex(1, CORE::MeshVertex(-100.0f, -10.0f, 100.0f, 0.0f, 0.0f, -1.0f, 3.0f, 0.0f));
+	_Mesh->SetVertex(2, CORE::MeshVertex(100.0f, -10.0f, 100.0f, 0.0f, 0.0f, -1.0f, 3.0f, 3.0f));
+
+	_Mesh->SetVertex(3, CORE::MeshVertex(100.0f, -10.0f, 100.0f, 0.0f, 0.0f, -1.0f, 3.0f, 3.0f));
+	_Mesh->SetVertex(4, CORE::MeshVertex(100.0f, -10.0f, -100.0f, 0.0f, 0.0f, -1.0f, 3.0f, 0.0f));
+	_Mesh->SetVertex(5, CORE::MeshVertex(-100.0f, -10.0f, -100.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
 
 	_Mesh->material = GetDefaultMaterial();	
 	_Mesh->texture = CORE::Texture::LoadPNG("./Resources/REFERENCE_GRASS_PHOTO.png");
@@ -58,17 +62,48 @@ void OnFrame(){
 	CORE::Matrix view = CORE::Matrix::Multiply(cameraTranslate, cameraRotate);
 	GL_SetViewMatrix(view);
 
-	if(DATACORE::_KEYBOARD_LEFT) {
-		_CameraYawY += 0.01;
+	if(DATACORE::_KEYBOARD_A) {
+		_CameraYawY += DATACORE::player_lookSpeed * Time::DeltaTime;
 	}
-	if(DATACORE::_KEYBOARD_RIGHT) {
-		_CameraYawY -= 0.01;
+	if(DATACORE::_KEYBOARD_D) {
+		_CameraYawY -= DATACORE::player_lookSpeed * Time::DeltaTime;
 	}
-	if(DATACORE::_KEYBOARD_UP) {
+	if(DATACORE::_KEYBOARD_W) {
 		DATACORE::Vector forward = Matrix::ExtractZ(view);
-		_CameraPositionX += 0.1*forward.x;
-		_CameraPositionY += 0.1*forward.y;
-		_CameraPositionZ += 0.1*forward.z;
+		_CameraPositionX += DATACORE::player_runSpeed * forward.x * Time::DeltaTime;
+		_CameraPositionY += DATACORE::player_runSpeed * forward.y * Time::DeltaTime;
+		_CameraPositionZ += DATACORE::player_runSpeed * forward.z * Time::DeltaTime;
+	}
+	if(DATACORE::_KEYBOARD_W && DATACORE::_KEYBOARD_SHIFT) {
+		//Sprint
+		DATACORE::Vector forward = Matrix::ExtractZ(view);
+		_CameraPositionX += DATACORE::player_runSpeed * 2.5f * forward.x * Time::DeltaTime;
+		_CameraPositionY += DATACORE::player_runSpeed * 2.5f * forward.y * Time::DeltaTime;
+		_CameraPositionZ += DATACORE::player_runSpeed * 2.5f * forward.z * Time::DeltaTime;
+	}
+	if(DATACORE::_KEYBOARD_S) {
+		DATACORE::Vector forward = Matrix::ExtractZ(view);
+		_CameraPositionX -= DATACORE::player_runSpeed * forward.x * Time::DeltaTime;
+		_CameraPositionY -= DATACORE::player_runSpeed * forward.y * Time::DeltaTime;
+		_CameraPositionZ -= DATACORE::player_runSpeed * forward.z * Time::DeltaTime;
+	}
+	if(DATACORE::_KEYBOARD_SPACE) {
+		DATACORE::player_STATE = 1;
+	}
+	
+ 	if(DATACORE::player_STATE == 1) {
+		//Jump
+		DATACORE::player_jumpVelocity -= DATACORE::player_gravity * Time::DeltaTime;
+		if(DATACORE::player_jumpVelocity < 0) {
+			if(DATACORE::player_jumpVelocity < -20.0f) 
+				DATACORE::player_jumpVelocity = -20.0f;
+			if(_CameraPositionY > 0.0f) {
+				_CameraPositionY = 0.0f;
+				DATACORE::player_STATE = 0; 
+				DATACORE::player_jumpVelocity = 16.0f;
+			}
+		}
+		_CameraPositionY -= DATACORE::player_jumpVelocity * Time::DeltaTime;	
 	}
 
 	_Mesh->Render(NULL);

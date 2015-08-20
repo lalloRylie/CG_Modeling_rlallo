@@ -29,6 +29,18 @@ namespace DATACORE{
 	extern bool _KEYBOARD_RIGHT;
 	extern bool _KEYBOARD_UP;	
 	extern bool _KEYBOARD_DOWN;	
+	extern bool _KEYBOARD_W;
+	extern bool _KEYBOARD_A;
+	extern bool _KEYBOARD_S;
+	extern bool _KEYBOARD_D;
+	extern bool _KEYBOARD_SHIFT;
+	extern bool _KEYBOARD_SPACE;
+
+	extern float player_runSpeed; 
+	extern float player_lookSpeed;
+	extern float player_jumpVelocity;
+	extern float player_gravity;
+	extern int   player_STATE;
 
 	class Vector {
 	public:

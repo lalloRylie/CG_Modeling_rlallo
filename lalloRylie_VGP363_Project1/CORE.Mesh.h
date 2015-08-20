@@ -50,7 +50,7 @@ namespace CORE {
 		void AllocateVertices(int count);
 		void SetVertex(int index, const MeshVertex& vertex);
 
-		static Mesh* CreateCube(float scale);
+		static Mesh* Mesh::CreateCube(float scale);
 		
 		void Build();
 		void Render(Camera* camera);

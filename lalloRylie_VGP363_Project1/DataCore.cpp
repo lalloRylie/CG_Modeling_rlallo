@@ -21,4 +21,16 @@ namespace DATACORE {
 	bool _KEYBOARD_RIGHT = false;
 	bool _KEYBOARD_UP	 = false;
 	bool _KEYBOARD_DOWN	 = false;
+	bool _KEYBOARD_W     = false;
+	bool _KEYBOARD_A     = false;
+	bool _KEYBOARD_S     = false;
+	bool _KEYBOARD_D     = false;
+	bool _KEYBOARD_SHIFT = false;
+	bool _KEYBOARD_SPACE = false;
+
+	float player_runSpeed = 10.0f;
+	float player_lookSpeed = 1.2f;
+	float player_jumpVelocity = 16.0f;
+	float player_gravity = 9.8f;
+	int player_STATE = 0;
 }

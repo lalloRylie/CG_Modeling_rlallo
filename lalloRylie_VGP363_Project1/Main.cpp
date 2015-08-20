@@ -41,7 +41,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			else if(key == 37) _KEYBOARD_LEFT = down;
 			else if(key == 38) _KEYBOARD_UP = down;
 			else if(key == 40) _KEYBOARD_DOWN = down;
-
+			else if (key == 87) _KEYBOARD_W = down;
+			else if (key == 65) _KEYBOARD_A = down;
+			else if (key == 83) _KEYBOARD_S = down;
+			else if (key == 68) _KEYBOARD_D = down;
+			else if (key == 16) _KEYBOARD_SHIFT = down;
+			else if (key == 32) _KEYBOARD_SPACE = down;
 			break;
         }
 
